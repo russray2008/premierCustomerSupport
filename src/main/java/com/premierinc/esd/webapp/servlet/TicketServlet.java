@@ -19,6 +19,7 @@ import javax.servlet.http.Part;
 import com.premierinc.esd.webapp.domain.Attachment;
 import com.premierinc.esd.webapp.domain.Ticket;
 
+@SuppressWarnings("serial")
 @WebServlet(
 	          name = "ticketServlet",
 	          urlPatterns = {"/tickets"},
@@ -34,7 +35,7 @@ public class TicketServlet extends HttpServlet {
 	private volatile int TICKET_ID_SEQUENCE =1;
 	
 	// temporary.  We will add a database later
-	private Map<Integer, Ticket> ticketDatabase = new LinkedHashMap();
+	private Map<Integer, Ticket> ticketDatabase = new LinkedHashMap<Integer, Ticket>();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
