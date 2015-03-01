@@ -11,10 +11,17 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.12</junit.version>
+		<wro4j.version>1.7.7</wro4j.version>
 	</properties>
 
 
 	<dependencies>
+
+		<dependency>
+			<groupId>ro.isdc.wro4j</groupId>
+			<artifactId>wro4j-core</artifactId>
+			<version>${wro4j.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.pmd</groupId>
 			<artifactId>pmd</artifactId>
@@ -43,26 +50,26 @@
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
-			<version>6.8.8</version>
+			<version>6.8.21</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.44.0</version>
+			<version>2.45.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-chrome-driver</artifactId>
-			<version>2.44.0</version>
+			<version>2.45.0</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-server</artifactId>
-			<version>2.44.0</version>
+			<version>2.45.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -76,7 +83,7 @@
 		<dependency>
 			<groupId>org.glassfish.web</groupId>
 			<artifactId>javax.servlet.jsp.jstl</artifactId>
-			<version>1.2.2</version>
+			<version>1.2.4</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -118,22 +125,23 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-				   <warName>premierCustomerSupport</warName>
-				   <outputDirectory>${project.build.directory}</outputDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.2</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<warName>premierCustomerSupport</warName>
+					<outputDirectory>${project.build.directory}</outputDirectory>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
@@ -177,54 +185,8 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18.1</version>
-				<configuration>
-					<!-- <suiteXmlFiles> <suiteXmlFile>testng.xml</suiteXmlFile> </suiteXmlFiles> -->
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.4</version>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<!-- Enables analysis which takes more memory but finds more bugs. If 
-						you run out of memory, changes the value of the effort element to 'Low'. -->
-					<effort>Max</effort>
-					<!-- Build doesn't fail if problems are found -->
-					<failOnError>false</failOnError>
-					<!-- Reports all bugs (other values are medium and max) -->
-					<threshold>Low</threshold>
-					<!-- Produces XML report -->
-					<xmlOutput>true</xmlOutput>
-					<!-- Configures the directory in which the XML report is created -->
-					<findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
-					<plugins>
-					   <plugin>
-                          <groupId>com.h3xstream.findsecbugs</groupId>
-                          <artifactId>findsecbugs-plugin</artifactId>
-                          <version>1.2.0</version>
-                    </plugin>
-					</plugins>
-				</configuration>
-				<executions>
-					<!-- Ensures that FindBugs inspects source code when project is compiled. -->
-					<execution>
-						<id>analyze-compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+
+
 			<plugin>
 				<groupId>com.cj.jshintmojo</groupId>
 				<artifactId>jshint-maven-plugin</artifactId>
@@ -237,20 +199,21 @@
 					</execution>
 				</executions>
 				<configuration>
+					<!-- assuming that the .jshintrc file is on the same level as the pom.xml -->
+					<configFile>jsHintRules.jshintrc</configFile>
 					<directories>
 						<directory>src/main/webapp/js</directory>
 					</directories>
 					<failOnError>false</failOnError>
-					<reportFile>target/site/jshint.xml</reportFile>
-					<reporter>jslint</reporter>
-					<!-- assuming that the .jshintrc file is on the same level as the pom.xml -->
-					<configFile>jsHintRules.jshintrc</configFile>
+					<reporter>checkstyle</reporter>
+					<reportFile>${project.build.directory}/site/jshint.xml</reportFile>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>ro.isdc.wro4j</groupId>
 				<artifactId>wro4j-maven-plugin</artifactId>
-				<version>1.7.7</version>
+				<version>${wro4j.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -259,79 +222,96 @@
 					</execution>
 				</executions>
 				<configuration>
-					<extraConfigFile>${basedir}/wro.perties</extraConfigFile>
+					<targetGroups>core</targetGroups>
+					<destinationFolder>${project.build.directory}/site</destinationFolder>
+					<extraConfigFile>${basedir}/wro.properties</extraConfigFile>
+					<contextFolder>${basedir}/src/main/webapp</contextFolder>
 					<failNever>true</failNever>
 					<wroFile>${basedir}/wro.xml</wroFile>
 					<options>box-model</options>
-					<reportFile>target/site/report.xml</reportFile>
 					<reportFormat>checkstyle-xml</reportFormat>
+					<mavenProject>${project}</mavenProject>
+					<reportFile>${project.build.directory}/site/csslint.xml</reportFile>
 				</configuration>
 			</plugin>
+
+
+			<!--This plugin's configuration is used to store Eclipse m2e settings 
+				only. It has no influence on the Maven build itself. -->
+			<plugin>
+				<groupId>org.eclipse.m2e</groupId>
+				<artifactId>lifecycle-mapping</artifactId>
+				<version>1.0.0</version>
+				<configuration>
+					<lifecycleMappingMetadata>
+						<pluginExecutions>
+							<pluginExecution>
+								<pluginExecutionFilter>
+									<groupId>ro.isdc.wro4j</groupId>
+									<artifactId>
+										wro4j-maven-plugin
+									</artifactId>
+									<versionRange>
+										[1.7.7,)
+									</versionRange>
+									<goals>
+										<goal>csslint</goal>
+									</goals>
+								</pluginExecutionFilter>
+								<action>
+									<ignore></ignore>
+								</action>
+							</pluginExecution>
+							<pluginExecution>
+								<pluginExecutionFilter>
+									<groupId>
+										org.codehaus.mojo
+									</groupId>
+									<artifactId>
+										findbugs-maven-plugin
+									</artifactId>
+									<versionRange>
+										[3.0.0,)
+									</versionRange>
+									<goals>
+										<goal>check</goal>
+									</goals>
+								</pluginExecutionFilter>
+								<action>
+									<ignore></ignore>
+								</action>
+							</pluginExecution>
+						</pluginExecutions>
+					</lifecycleMappingMetadata>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.18.1</version>
+				<configuration>
+				    <forkMode>once</forkMode>
+					<!-- <suiteXmlFiles> <suiteXmlFile>testng.xml</suiteXmlFile> </suiteXmlFiles> -->
+					<skip>true</skip>
+				</configuration>
+				<executions>
+				   <execution>
+				         <goals>
+				            <goal>test</goal>
+				         </goals>
+				         <configuration>
+				            <skip>false</skip>
+				         </configuration>
+				   </execution>
+				</executions>
+			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>ro.isdc.wro4j</groupId>
-										<artifactId>
-											wro4j-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.7.7,)
-										</versionRange>
-										<goals>
-											<goal>csslint</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											findbugs-maven-plugin
-										</artifactId>
-										<versionRange>
-											[3.0.0,)
-										</versionRange>
-										<goals>
-											<goal>check</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+
 	</build>
 
 	<reporting>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-				</configuration>
-			</plugin>
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
@@ -348,18 +328,18 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
 				<version>2.18.1</version>
+				<reportSets>
+				  <reportSet>
+				  	<reports>
+				  		<report>report-only</report>
+				  	</reports>
+				  </reportSet>
+				</reportSets>
 				<configuration>
 					<outputDirectory>${basedir}/target/site</outputDirectory>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<outputDirectory>${basedir}/target/site</outputDirectory>
-				</configuration>
-			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
@@ -375,15 +355,6 @@
 				<configuration>
 					<verbose>true</verbose>
 					<linkXref>true</linkXref>
-					<rulesets>
-						<ruleset>rulesets/java/braces.xml</ruleset>
-						<ruleset>rulesets/java/naming.xml</ruleset>
-						<ruleset>rulesets/java/basic.xml</ruleset>
-						<ruleset>rulesets/jsp/basic.xml</ruleset>
-						<ruleset>rulesets/java/imports.xml</ruleset>
-						<ruleset>rulesets/java/logging-java.xml</ruleset>
-					</rulesets>
-
 					<sourceEncoding>utf-8</sourceEncoding>
 					<minimumTokens>100</minimumTokens>
 					<targetJdk>1.8</targetJdk>
@@ -395,6 +366,14 @@
 					<excludeRoots>
 						<excludeRoot>target/generated-sources/stubs</excludeRoot>
 					</excludeRoots>
+					<rulesets>
+						<ruleset>rulesets/java/braces.xml</ruleset>
+						<ruleset>rulesets/java/naming.xml</ruleset>
+						<ruleset>rulesets/java/basic.xml</ruleset>
+						<ruleset>rulesets/jsp/basic.xml</ruleset>
+						<ruleset>rulesets/java/imports.xml</ruleset>
+						<ruleset>rulesets/java/logging-java.xml</ruleset>
+					</rulesets>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -411,15 +390,64 @@
 					<xmlOutput>true</xmlOutput>
 					<findbugsXmlOutputDirectory>${project.build.directory}/site</findbugsXmlOutputDirectory>
 					<plugins>
-					   <plugin>
-                          <groupId>com.h3xstream.findsecbugs</groupId>
-                          <artifactId>findsecbugs-plugin</artifactId>
-                          <version>1.2.0</version>
-                       </plugin>
+						<plugin>
+							<groupId>com.h3xstream.findsecbugs</groupId>
+							<artifactId>findsecbugs-plugin</artifactId>
+							<version>1.2.0</version>
+						</plugin>
 					</plugins>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>ro.isdc.wro4j</groupId>
+				<artifactId>wro4j-maven-plugin</artifactId>
+				<version>1.7.7</version>
+				<configuration>
+					<targetGroups>core</targetGroups>
+					<destinationFolder>${project.build.directory}/site</destinationFolder>
+					<extraConfigFile>${basedir}/wro.properties</extraConfigFile>
+					<contextFolder>${basedir}/src/main/webapp/</contextFolder>
+					<failNever>true</failNever>
+					<wroFile>${basedir}/wro.xml</wroFile>
+					<options>box-model</options>
+					<reportFormat>checkstyle-xml</reportFormat>
+					<mavenProject>${project}</mavenProject>
+					<reportFile>${project.build.directory}/site/csslint.xml</reportFile>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.14</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>checkstyle</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.4</version>
+				<configuration>
+					<outputDirectory>${basedir}/target/site</outputDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+				</configuration>
+			</plugin>
 		</plugins>
 	</reporting>
 </project>

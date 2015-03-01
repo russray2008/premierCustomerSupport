@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <groups xmlns="http://www.isdc.ro/wro">
+
   <group name='core'>
-    <css>/src/main/webapp/css/global-whitespace-reset.css</css>
-    <js>/src/main/webapp/js/breadcrumbs.js</js>
+     <css>/css/global-whitespace.reset.css</css>
+     <css>/css/test.css</css>
+    <js>/js/breadcrumbs.js</js>
   </group>
+  
 </groups>
