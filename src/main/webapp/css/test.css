@@ -1,0 +1,9 @@
+nav {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  paddling: 250px;
+}
+nav ul {
+  background: #red;
+}
